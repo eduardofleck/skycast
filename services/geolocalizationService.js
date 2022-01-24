@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const getCityByGeolocalization = () => {
+const getCityByGeolocalization = (callback, callbackOnError) => {
   navigator.geolocation.getCurrentPosition(function (position) {
     axios
       .get(process.env.GOOGLE_GEOCODE_API, {
@@ -30,13 +30,16 @@ const getCityByGeolocalization = () => {
           }
 
           console.log(city.long_name);
+          callback(city.long_name);
         },
         (error) => {
           console.log(error);
+          callbackOnError(error);
         }
       )
       .catch(function (error) {
         console.log(error);
+        callbackOnError(error);
       });
   });
 };

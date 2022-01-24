@@ -7,6 +7,7 @@ import WeatherChart from "../components/WeatherChart";
 import forecast from "../services/weatherService";
 import getCityByGeolocalization from "../services/geolocalizationService";
 import styled from "styled-components";
+//import { useGetData } from "../services/useQuery";
 
 const OuterGrid = styled.div`
   display: grid;
@@ -26,6 +27,8 @@ const ButtonsGrid = styled.div`
 
 export default function ForecastCity() {
   var [location, setLocation] = React.useState("");
+  var [geoLocalizationEnabled, setGeoLocalizationEnabled] =
+    React.useState(false);
   var [forecastData, setForecastData] = React.useState("");
 
   const getForecast = (e) => {
@@ -34,14 +37,41 @@ export default function ForecastCity() {
     }
   };
 
+  const getCityCallback = (city) => {
+    console.log(`getCityCallback`);
+    console.log(`setting location as ${city}`);
+    setLocation(city);
+    setGeoLocalizationEnabled(true);
+  };
+
+  const getCityCallbackError = (error) => {
+    console.log(`getCityCallbackError`);
+    console.error(error);
+  };
+
   const getCity = (e) => {
-    getCityByGeolocalization(e);
+    getCityByGeolocalization(getCityCallback, getCityCallbackError);
   };
 
   const saveToState = (event) => {
     const { name, value } = event.target;
 
     setLocation(value);
+  };
+
+  React.useEffect(() => {
+    console.log("getCity");
+    getCity();
+  }, []);
+
+  const ButtonImLost = () => {
+    if (!geoLocalizationEnabled)
+      return (
+        <Button variant="outlined" onClick={getCity}>
+          I`m Lost
+        </Button>
+      );
+    else return null;
   };
 
   return (
@@ -51,16 +81,14 @@ export default function ForecastCity() {
           id="city"
           label="City"
           variant="outlined"
-          defaultValue={location}
+          value={location}
           onChange={saveToState}
         />
         <ButtonsGrid>
           <Button variant="outlined" onClick={getForecast}>
             Forecast
           </Button>
-          <Button variant="outlined" onClick={getCity}>
-            I`m Lost
-          </Button>
+          <ButtonImLost></ButtonImLost>
         </ButtonsGrid>
       </OuterGrid>
       <WeatherChart

@@ -5,5 +5,6 @@ module.exports = {
     VISUALCROSSING_API: process.env.VISUALCROSSING_API,
     GOOGLE_KEY: process.env.GOOGLE_KEY,
     GOOGLE_GEOCODE_API: process.env.GOOGLE_GEOCODE_API,
+    DEBUG_ENABLED: process.env.DEBUG_ENABLED,
   },
 };
