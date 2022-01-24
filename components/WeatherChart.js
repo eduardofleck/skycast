@@ -10,6 +10,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import styled from "styled-components";
 
 ChartJS.register(
   CategoryScale,
@@ -21,45 +22,62 @@ ChartJS.register(
   Legend
 );
 
+const OuterGridChart = styled.div`
+  height: 400px;
+`;
+
 export default function WeatherChart(props) {
-  let labels = props.labels;
-  let maxValues = props.maxValues;
-  let minValues = props.minValues;
+  if (props.forecast) {
+    let labels = [];
+    let maxValues = [];
+    let minValues = [];
 
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "top",
-      },
-      title: {
-        display: true,
-        text: props.title,
-      },
-    },
-  };
+    props.forecast.forEach((day) => {
+      labels.push(
+        `${day.datetime.toString().substring(8)}/${day.datetime
+          .toString()
+          .substring(5, 7)}`
+      );
+      maxValues.push(day.tempmax);
+      minValues.push(day.tempmin);
+    });
 
-  let data = {
-    labels,
-    datasets: [
-      {
-        label: "Max",
-        data: maxValues,
-        borderColor: "rgb(255, 99, 132)",
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
+    const options = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: "top",
+        },
+        title: {
+          display: true,
+          text: `Weather forecast for the next ${props.forecast.length} days`,
+        },
       },
-      {
-        label: "Min",
-        data: minValues,
-        borderColor: "rgb(53, 162, 235)",
-        backgroundColor: "rgba(53, 162, 235, 0.5)",
-      },
-    ],
-  };
+    };
 
-  return (
-    <div>
-      <Line options={options} data={data} />;
-    </div>
-  );
+    let data = {
+      labels,
+      datasets: [
+        {
+          label: "Max",
+          data: maxValues,
+          borderColor: "rgb(255, 99, 132)",
+          backgroundColor: "rgba(255, 99, 132, 0.5)",
+        },
+        {
+          label: "Min",
+          data: minValues,
+          borderColor: "rgb(53, 162, 235)",
+          backgroundColor: "rgba(53, 162, 235, 0.5)",
+        },
+      ],
+    };
+
+    return (
+      <OuterGridChart>
+        <Line options={options} data={data} />
+      </OuterGridChart>
+    );
+  } else return null;
 }
