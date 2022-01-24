@@ -6,7 +6,7 @@ Open source weather forecast using API`s from https://www.visualcrossing.com/ an
 
 # Tech
 
-React + Next.JS + Axios + dotenv
+React + Next.JS + Axios
 
 ## Getting Started
 
@@ -14,7 +14,10 @@ Create a .env file with the following key/values:
 
 ```
 VISUALCROSSING_KEY=howsuchstrongkey
+VISUALCROSSING_API=https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline
 GOOGLE_KEY=anothersuchstrongkey
+GOOGLE_GEOCODE_API=https://maps.googleapis.com/maps/api/geocode/json
+DEBUG_ENABLED=true
 ```
 
 First, run the development server:
