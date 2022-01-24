@@ -25,15 +25,19 @@ const ButtonsGrid = styled.div`
   grid-gap: 10px;
 `;
 
-export default function ForecastCity() {
+export default function ForecastCity(props) {
   var [location, setLocation] = React.useState("");
   var [geoLocalizationEnabled, setGeoLocalizationEnabled] =
     React.useState(false);
-  var [forecastData, setForecastData] = React.useState("");
+
+  const getForecastCallbackError = (error) => {
+    console.log(`getCityCallbackError`);
+    console.error(error);
+  };
 
   const getForecast = (e) => {
     if (location) {
-      forecast(location);
+      forecast(location, props.onForecast, getForecastCallbackError);
     }
   };
 
@@ -91,12 +95,6 @@ export default function ForecastCity() {
           <ButtonImLost></ButtonImLost>
         </ButtonsGrid>
       </OuterGrid>
-      <WeatherChart
-        maxValues={[10, 12, 15, 17, 18, 19]}
-        minValues={[0, 6, 10, 12, 15, 9]}
-        title="Forecast for the next 6 days"
-        labels={["22/01", "23/01", "24/01", "25/01", "26/01", "27/01"]}
-      />
     </div>
   );
 }

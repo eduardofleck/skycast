@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import axios from "axios";
 import WeatherChart from "../components/WeatherChart";
 
-const forecast = (location) => {
+const forecast = (location, callback, callbackOnError) => {
   if (location) {
     console.log(`forecasting....${location}`);
     axios
@@ -18,14 +18,17 @@ const forecast = (location) => {
       })
       .then(
         (response) => {
-          console.log(response);
+          console.log(`returning data from forecast!`);
+          callback(response);
         },
         (error) => {
-          console.log(error);
+          console.log(`Error on forecast!`);
+          callbackOnError(error);
         }
       )
       .catch(function (error) {
-        console.log(error);
+        console.log(`Error on forecast!`);
+        callbackOnError(error);
       });
   }
 };
