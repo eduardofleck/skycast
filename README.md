@@ -1,6 +1,4 @@
-# Open Source Cléo Kuhn
-
-Cleo Kuhn is a famous Brazilian meteorologist, this project plays a simple tribute to this figure :)
+# SkyCast
 
 Open source weather forecast using API`s from https://www.visualcrossing.com/ and https://developers.google.com/maps
 
