@@ -55,7 +55,13 @@ export default function Home() {
     if (historicForecast === "historic") {
       return <HistoricBanner location={forecastLocation} />;
     } else {
-      return <WeatherChart forecast={forecast} />;
+      let days = forecast ? forecast.length : 0;
+      return (
+        <WeatherChart
+          forecast={forecast}
+          title={`Weather forecast for the next ${days} days`}
+        />
+      );
     }
   };
 

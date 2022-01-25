@@ -51,7 +51,7 @@ export default function WeatherChart(props) {
         },
         title: {
           display: true,
-          text: `Weather forecast for the next ${props.forecast.length} days`,
+          text: props.title,
         },
       },
     };

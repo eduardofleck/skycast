@@ -98,7 +98,7 @@ export default function HistoricBanner(props) {
           </Table>
         );
       } else {
-        return <WeatherChart forecast={forecast} />;
+        return <WeatherChart forecast={historicData} title={"Historic data"} />;
       }
     }
   };
