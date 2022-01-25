@@ -1,19 +1,14 @@
 import React, { useState, useEffect } from "react";
-import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import axios from "axios";
-import WeatherChart from "../components/WeatherChart";
-import forecast from "../services/weatherService";
+import { getForecast } from "../services/weatherService";
 import getCityByGeolocalization from "../services/geolocalizationService";
 import styled from "styled-components";
-//import { useGetData } from "../services/useQuery";
 
 const OuterGrid = styled.div`
   display: grid;
   grid-template-rows: auto auto;
   align-items: center;
-  margin: 10px;
   grid-gap: 10px;
 `;
 
@@ -35,9 +30,9 @@ export default function ForecastCity(props) {
     console.error(error);
   };
 
-  const getForecast = (e) => {
+  const onClickForecast = (e) => {
     if (location) {
-      forecast(location, props.onForecast, getForecastCallbackError);
+      getForecast(location, props.onForecast, getForecastCallbackError);
     }
   };
 
@@ -89,7 +84,7 @@ export default function ForecastCity(props) {
           onChange={saveToState}
         />
         <ButtonsGrid>
-          <Button variant="outlined" onClick={getForecast}>
+          <Button variant="outlined" onClick={onClickForecast}>
             Forecast
           </Button>
           <ButtonImLost></ButtonImLost>

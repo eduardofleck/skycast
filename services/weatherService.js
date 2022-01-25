@@ -1,11 +1,6 @@
-import React, { useState, useEffect } from "react";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
 import axios from "axios";
-import WeatherChart from "../components/WeatherChart";
 
-const forecast = (location, callback, callbackOnError) => {
+const getForecast = (location, callback, callbackOnError) => {
   if (location) {
     console.log(`forecasting....${location}`);
     axios
@@ -33,4 +28,42 @@ const forecast = (location, callback, callbackOnError) => {
   }
 };
 
-export default forecast;
+const getHistoricData = (
+  location,
+  dateStart,
+  dateEnd,
+  callback,
+  callbackOnError
+) => {
+  if (location) {
+    console.log(`historic data....${location}`);
+    axios
+      .get(
+        `${process.env.VISUALCROSSING_API}/${location}/${dateStart}/${dateEnd}`,
+        {
+          params: {
+            unitGroup: "metric",
+            include: "days",
+            key: process.env.VISUALCROSSING_KEY,
+            contentType: "json",
+          },
+        }
+      )
+      .then(
+        (response) => {
+          console.log(`returning historic data!`);
+          callback(response);
+        },
+        (error) => {
+          console.log(`Error on historic data!`);
+          callbackOnError(error);
+        }
+      )
+      .catch(function (error) {
+        console.log(`Error on historic data!`);
+        callbackOnError(error);
+      });
+  }
+};
+
+export { getHistoricData, getForecast };
