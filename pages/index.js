@@ -1,27 +1,10 @@
 import React, { useState, useEffect } from "react";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import axios from "axios";
 import WeatherChart from "../components/WeatherChart";
-import forecast from "../services/weatherService";
-import getCityByGeolocalization from "../services/geolocalizationService";
 import ForecastCity from "../components/ForecastCity";
 import WeatherBanner from "../components/WeatherBanner";
-import ButtonGroup from "@mui/material/ButtonGroup";
 import styled from "styled-components";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DatePicker from "@mui/lab/DatePicker";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import HistoricBanner from "../components/HistoricBanner";
 
 const OuterGrid = styled.div`
@@ -37,8 +20,6 @@ export default function Home() {
   var [forecastLocation, setForecastLocation] = React.useState(null);
   var [forecast, setForecast] = React.useState(null);
   var [historicForecast, setHistoricForecast] = React.useState("forecast");
-  var [dateStart, setDateStart] = React.useState(null);
-  var [dateEnd, setDateEnd] = React.useState(null);
 
   const onForecast = (data) => {
     console.log(data.data);
@@ -76,11 +57,6 @@ export default function Home() {
     } else {
       return <WeatherChart forecast={forecast} />;
     }
-  };
-
-  const query = () => {
-    console.log(dateStart);
-    console.log(dateEnd);
   };
 
   return (
