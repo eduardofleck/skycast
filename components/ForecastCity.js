@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
 import { getForecast } from "../services/weatherService";
 import getCityByGeolocalization from "../services/geolocalizationService";
 import styled from "styled-components";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 const OuterGrid = styled.div`
   display: grid;
@@ -21,18 +21,26 @@ const ButtonsGrid = styled.div`
 `;
 
 export default function ForecastCity(props) {
+  var [isSpinnerOn, setIsSpinnerOn] = React.useState(false);
   var [location, setLocation] = React.useState("");
   var [geoLocalizationEnabled, setGeoLocalizationEnabled] =
     React.useState(false);
 
   const getForecastCallbackError = (error) => {
+    setIsSpinnerOn(false);
     console.log(`getCityCallbackError`);
     console.error(error);
   };
 
+  const getForecastCallback = (data) => {
+    setIsSpinnerOn(false);
+    props.onForecast(data);
+  };
+
   const onClickForecast = (e) => {
     if (location) {
-      getForecast(location, props.onForecast, getForecastCallbackError);
+      setIsSpinnerOn(true);
+      getForecast(location, getForecastCallback, getForecastCallbackError);
     }
   };
 
@@ -41,14 +49,17 @@ export default function ForecastCity(props) {
     console.log(`setting location as ${city}`);
     setLocation(city);
     setGeoLocalizationEnabled(true);
+    setIsSpinnerOn(false);
   };
 
   const getCityCallbackError = (error) => {
     console.log(`getCityCallbackError`);
     console.error(error);
+    setIsSpinnerOn(false);
   };
 
   const getCity = (e) => {
+    setIsSpinnerOn(true);
     getCityByGeolocalization(getCityCallback, getCityCallbackError);
   };
 
@@ -66,9 +77,13 @@ export default function ForecastCity(props) {
   const ButtonImLost = () => {
     if (!geoLocalizationEnabled)
       return (
-        <Button variant="outlined" onClick={getCity}>
+        <LoadingButton
+          variant="outlined"
+          loading={isSpinnerOn}
+          onClick={getCity}
+        >
           I`m Lost
-        </Button>
+        </LoadingButton>
       );
     else return null;
   };
@@ -82,11 +97,16 @@ export default function ForecastCity(props) {
           variant="outlined"
           value={location}
           onChange={saveToState}
+          enabled={isSpinnerOn}
         />
         <ButtonsGrid>
-          <Button variant="outlined" onClick={onClickForecast}>
+          <LoadingButton
+            variant="outlined"
+            onClick={onClickForecast}
+            loading={isSpinnerOn}
+          >
             Forecast
-          </Button>
+          </LoadingButton>
           <ButtonImLost></ButtonImLost>
         </ButtonsGrid>
       </OuterGrid>

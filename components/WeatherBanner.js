@@ -9,7 +9,7 @@ export default function WeatherBanner(props) {
       <Card>
         <CardContent>
           <Typography gutterBottom variant="h4" component="div">
-            {props.location} - {props.weather.datetime}
+            {props.location}
           </Typography>
           <Typography gutterBottom variant="h5" component="div">
             {props.weather.conditions}
@@ -20,12 +20,10 @@ export default function WeatherBanner(props) {
             Feels like: {props.weather.feelslike}
             <br />
             Humidity: {props.weather.humidity}%
+            <br />
+            Measurement time: {props.weather.datetime}
           </Typography>
         </CardContent>
-        {/* <CardActions>
-            <Button size="small">Share</Button>
-            <Button size="small">Learn More</Button>
-          </CardActions> */}
       </Card>
     );
   } else return null;

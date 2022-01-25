@@ -8,7 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import styled from "styled-components";
 
 const ChildrenOuterGrid = styled.div`
-  margin: 50px;
+  margin: 20px 5px 5px 5px;
 `;
 
 export default function Template(props) {
