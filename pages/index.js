@@ -6,6 +6,12 @@ import styled from "styled-components";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
 import HistoricBanner from "../components/HistoricBanner";
+import MuiAlert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const OuterGrid = styled.div`
   //border: 1px solid black;
@@ -20,6 +26,8 @@ export default function Home() {
   var [forecastLocation, setForecastLocation] = React.useState(null);
   var [forecast, setForecast] = React.useState(null);
   var [historicForecast, setHistoricForecast] = React.useState("forecast");
+  var [isSnackBarOpen, setIsSnackBarOpen] = React.useState(false);
+  var [error, setError] = React.useState("");
 
   const onForecast = (data) => {
     console.log(data.data);
@@ -65,12 +73,34 @@ export default function Home() {
     }
   };
 
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setIsSnackBarOpen(false);
+  };
+
+  const onError = (error) => {
+    setError(error);
+    setIsSnackBarOpen(true);
+  };
+
   return (
     <OuterGrid>
-      <ForecastCity onForecast={onForecast}></ForecastCity>
+      <ForecastCity onForecast={onForecast} onError={onError}></ForecastCity>
       <WeatherBanner weather={weather} location={forecastLocation} />
       {buttons()}
       {forecastHistoric()}
+      <Snackbar
+        open={isSnackBarOpen}
+        autoHideDuration={6000}
+        onClose={handleClose}
+      >
+        <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
+          {error}
+        </Alert>
+      </Snackbar>
     </OuterGrid>
   );
 }

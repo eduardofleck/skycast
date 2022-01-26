@@ -4,6 +4,7 @@ import { getForecast } from "../services/weatherService";
 import getCityByGeolocalization from "../services/geolocalizationService";
 import styled from "styled-components";
 import LoadingButton from "@mui/lab/LoadingButton";
+import Autocomplete from "@mui/material/Autocomplete";
 
 const OuterGrid = styled.div`
   display: grid;
@@ -20,21 +21,33 @@ const ButtonsGrid = styled.div`
   grid-gap: 10px;
 `;
 
+const sessionKey = "#previousSearches#";
+
 export default function ForecastCity(props) {
   var [isSpinnerOn, setIsSpinnerOn] = React.useState(false);
   var [location, setLocation] = React.useState("");
+  var [previousSearches, setPreviousSearches] = React.useState([]);
   var [geoLocalizationEnabled, setGeoLocalizationEnabled] =
     React.useState(false);
 
   const getForecastCallbackError = (error) => {
     setIsSpinnerOn(false);
-    console.log(`getCityCallbackError`);
     console.error(error);
+    props.onError("I was not able to find your city :(");
   };
 
   const getForecastCallback = (data) => {
     setIsSpinnerOn(false);
     props.onForecast(data);
+    if (
+      data.data.address != null &&
+      !previousSearches.includes(data.data.address)
+    ) {
+      let prevS = previousSearches;
+      prevS.push(data.data.address);
+      setPreviousSearches([...prevS]);
+      window.sessionStorage.setItem(sessionKey, prevS);
+    }
   };
 
   const onClickForecast = (e) => {
@@ -45,7 +58,6 @@ export default function ForecastCity(props) {
   };
 
   const getCityCallback = (city) => {
-    console.log(`getCityCallback`);
     console.log(`setting location as ${city}`);
     setLocation(city);
     setGeoLocalizationEnabled(true);
@@ -53,7 +65,6 @@ export default function ForecastCity(props) {
   };
 
   const getCityCallbackError = (error) => {
-    console.log(`getCityCallbackError`);
     console.error(error);
     setIsSpinnerOn(false);
   };
@@ -70,8 +81,11 @@ export default function ForecastCity(props) {
   };
 
   React.useEffect(() => {
-    console.log("getCity");
     getCity();
+
+    let value = window.sessionStorage.getItem(sessionKey);
+    console.log(`got value ${value} on session ${sessionKey}`);
+    if (value && value.length > 0) setPreviousSearches(value.split(","));
   }, []);
 
   const ButtonImLost = () => {
@@ -91,13 +105,32 @@ export default function ForecastCity(props) {
   return (
     <div>
       <OuterGrid>
-        <TextField
-          id="city"
-          label="City"
-          variant="outlined"
+        <Autocomplete
+          id="grouped-querys"
           value={location}
-          onChange={saveToState}
-          enabled={isSpinnerOn}
+          onChange={(event, newValue) => {
+            if (typeof newValue === "string") {
+              setLocation(newValue);
+            } else if (newValue && newValue.inputValue) {
+              // Create a new value from the user input
+              setLocation(newValue.inputValue);
+            } else {
+              setLocation(newValue);
+            }
+          }}
+          options={previousSearches}
+          groupBy={(option) => "Previous Searches"}
+          getOptionLabel={(option) => option}
+          freeSolo
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              id="city"
+              variant="outlined"
+              label="City"
+              onChange={saveToState}
+            />
+          )}
         />
         <ButtonsGrid>
           <LoadingButton
