@@ -21,7 +21,7 @@ const ButtonsGrid = styled.div`
   grid-gap: 10px;
 `;
 
-const sessionKey = "#previousSearches#";
+const localStorageKey = "#previousSearches#";
 
 export default function ForecastCity(props) {
   var [isSpinnerOn, setIsSpinnerOn] = React.useState(false);
@@ -46,7 +46,7 @@ export default function ForecastCity(props) {
       let prevS = previousSearches;
       prevS.push(data.data.address);
       setPreviousSearches([...prevS]);
-      window.sessionStorage.setItem(sessionKey, prevS);
+      window.localStorage.setItem(localStorageKey, prevS);
     }
   };
 
@@ -83,8 +83,8 @@ export default function ForecastCity(props) {
   React.useEffect(() => {
     getCity();
 
-    let value = window.sessionStorage.getItem(sessionKey);
-    console.log(`got value ${value} on session ${sessionKey}`);
+    let value = window.localStorage.getItem(localStorageKey);
+    console.log(`got value ${value} on session ${localStorageKey}`);
     if (value && value.length > 0) setPreviousSearches(value.split(","));
   }, []);
 
