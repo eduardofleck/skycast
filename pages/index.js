@@ -97,8 +97,8 @@ export default function Home() {
         autoHideDuration={6000}
         onClose={handleClose}
       >
-        <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
-          {error}
+        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+          Another lead sent!
         </Alert>
       </Snackbar>
     </OuterGrid>
